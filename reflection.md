@@ -8,7 +8,10 @@ Answer each question in 3 to 5 sentences. Be specific and honest about what actu
 - List at least two concrete bugs you noticed at the start  
   (for example: "the hints were backwards").
 
-  Answer: The game's answer was 44 but I guessed 37, 21, 13 and it said no each time and kept telling me to go lower. The left side panel when switched to hard shows 1-50 as possible choices instead of the true 1-100.
+  Answer: 
+  - The game's answer was 44 but I guessed 37, 21, 13 and it said no each time and kept telling me to go lower. 
+  - The left side panel when switched to hard shows 1-50 as possible choices instead of the true 1-100. 
+  -pytest will fail because logic_utils.check_guess raises NotImplementedError
 
 ---
 
@@ -20,7 +23,7 @@ Answer each question in 3 to 5 sentences. Be specific and honest about what actu
 
 Answer: 
 
-I used Gemini to assist with this project. One example that it gave me was immediately telling me that I was incorrectly trying to debug something and that it was already good to go. 
+I used Gemini to assist with this project. One example that it gave me was immediately telling me that I was incorrectly trying to debug something and that it was already good to go. I also ended up using GitHub Copilot as a standalone to help me plan, with Copilot within codespaces being utilized to implement the steps.
 
 ---
 
@@ -33,7 +36,7 @@ I used Gemini to assist with this project. One example that it gave me was immed
 
 Answer: 
 
-I manually ran the code and tested it before utilizing pytest to run "automatic" testing.
+I manually ran the code and tested it before utilizing pytest to run "automatic" testing. I also ran the test_game_logic.py tests to see what errors populated during the testing process.
 ---
 
 ## 4. What did you learn about Streamlit and state?
@@ -43,7 +46,6 @@ I manually ran the code and tested it before utilizing pytest to run "automatic"
 Answer: 
 
 Rerun causes the script to restart each time you do anything. Session storage is where you store the information so that re-reading doesn't cause you to lose information/progress.
-
 
 
 ---
@@ -58,4 +60,4 @@ Rerun causes the script to restart each time you do anything. Session storage is
 
 Answer: 
 
-The project did not change the way I think about AI, but it did reinforce the need to always double check scripts.
+The project did not change the way I think about AI, but it did reinforce the need to always double check scripts. Something that it did change is how I will implement AI in the future, before this class I never utilized agents within my IDE...or even understood how easy they could be to implement. I have prior familiarity with Google Jules but that was all.

@@ -7,4 +7,4 @@ argument-hint: The inputs this agent expects, e.g., "a task to implement" or "a 
 
 <!-- Tip: Use /create-agent in chat to generate content with agent assistance -->
 
-Define what this custom agent does, including its behavior, capabilities, and any specific instructions for its operation.
+Iteratively investigate and fix the glitches in the Game Glitch Investigator project. Use AI tools to assist with debugging, testing, and understanding Streamlit's reruns and session state. Create a log for tracking bugs and the fixes applied utilizing python rich library, add console logs to the codebase, and maintain a todo list of tasks to complete the feature. Reflect on the process and document your learnings in a markdown file.
