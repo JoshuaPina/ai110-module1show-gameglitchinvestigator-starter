@@ -141,4 +141,4 @@ if submit:
             )
 
 st.divider()
-st.caption("Built by an AI that claims this code is production-ready.")
+st.caption("Built by an AI that claims this code is production-ready. Fixed by a human that knows better than to trust a strange robot.")
