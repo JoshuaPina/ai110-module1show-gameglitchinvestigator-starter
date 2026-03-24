@@ -38,6 +38,18 @@ It wrote the code, ran away, and now the game is unplayable.
 
 - [x] [#winning](/workspaces/ai110-module1show-gameglitchinvestigator-starter/winning.png)
 
+## ✅ Challenge 1: Advanced Edge-Case Testing
+
+I added pytest coverage for three edge-case inputs that could break game logic:
+
+1. Negative number input (`-5`): verifies parsing succeeds and gameplay logic returns `Too Low` without crashing.
+2. Decimal input (`42.5`): verifies parsing rejects the value gracefully with a clear error message.
+3. Extremely large value (`999999999999999999999999999999`): verifies parsing and comparison logic remain stable and return `Too High`.
+
+Edge-case tests were added to [tests/test_game_logic.py](tests/test_game_logic.py) and all tests pass.
+
+![Pytest edge-case run results](pytest_edge_cases.png)
+
 ## 🚀 Stretch Features
 
 - [ ] [If you choose to complete Challenge 4, insert a screenshot of your Enhanced Game UI here]
