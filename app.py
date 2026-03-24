@@ -1,90 +1,11 @@
-#FIXME: Logic breaks here
-    if guess > secret:
-        return 'Go LOWER'
-    #FIXME: Logic breaks here
-    elif guess < secret:
-        return 'Go HIGHER'
+import random
 
-<<<<<<< HEAD
-    #FIXME: Logic breaks here
-    st.session_state.attempts = 0
-    #FIXME: Logic breaks here
-    st.session_state.attempts = 1
-    ... # Unchanged code  
-    return 1, 50
-    #FIXME: Logic breaks here
-    
-    raise NotImplementedError
-    #FIXME: Logic breaks here
-    raise NotImplementedError
-    #FIXME: Logic breaks here
-    raise NotImplementedError
-    #FIXME: Logic breaks here
-    raise NotImplementedError
-=======
-def get_range_for_difficulty(difficulty: str):
-    if difficulty == "Easy":
-        return 1, 20
-    if difficulty == "Normal":
-        return 1, 100
-    if difficulty == "Hard":
-        return 1, 50
-    return 1, 100
+import streamlit as st
+from rich.console import Console
 
+from logic_utils import check_guess, get_range_for_difficulty, parse_guess, update_score
 
-def parse_guess(raw: str):
-    if raw is None:
-        return False, None, "Enter a guess."
-
-    if raw == "":
-        return False, None, "Enter a guess."
-
-    try:
-        if "." in raw:
-            value = int(float(raw))
-        else:
-            value = int(raw)
-    except Exception:
-        return False, None, "That is not a number."
-
-    return True, value, None
-
-
-def check_guess(guess, secret):
-    if guess == secret:
-        return "Win", "🎉 Correct!"
-
-    try:
-        #FIXME: Logic breaks here
-        if guess > secret:
-            return "Too High", "📉 Go LOWER!"
-        else:
-            return "Too Low", "📈 Go HIGHER!"
-    except TypeError:
-        g = str(guess)
-        if g == secret:
-            return "Win", "🎉 Correct!"
-        if g > secret:
-            return "Too High", "📉 Go LOWER!"
-        return "Too Low", "📈 Go HIGHER!"
-
-
-def update_score(current_score: int, outcome: str, attempt_number: int):
-    if outcome == "Win":
-        points = 100 - 10 * (attempt_number + 1)
-        if points < 10:
-            points = 10
-        return current_score + points
-
-    if outcome == "Too High":
-        if attempt_number % 2 == 0:
-            return current_score + 5
-        return current_score - 5
-
-    if outcome == "Too Low":
-        return current_score - 5
-
-    return current_score
+console = Console()
 
 st.set_page_config(page_title="Glitchy Guesser", page_icon="🎮")
 
@@ -113,9 +34,10 @@ st.sidebar.caption(f"Attempts allowed: {attempt_limit}")
 
 if "secret" not in st.session_state:
     st.session_state.secret = random.randint(low, high)
+    st.session_state.difficulty = difficulty
 
 if "attempts" not in st.session_state:
-    st.session_state.attempts = 1
+    st.session_state.attempts = 0
 
 if "score" not in st.session_state:
     st.session_state.score = 0
@@ -126,12 +48,20 @@ if "status" not in st.session_state:
 if "history" not in st.session_state:
     st.session_state.history = []
 
+if st.session_state.get("difficulty") != difficulty:
+    st.session_state.secret = random.randint(low, high)
+    st.session_state.attempts = 0
+    st.session_state.score = 0
+    st.session_state.status = "playing"
+    st.session_state.history = []
+    st.session_state.difficulty = difficulty
+    console.log(f"Difficulty changed to {difficulty}; game state reset.")
+
 st.subheader("Make a guess")
 
-#FIXME: Logic breaks here
 st.info(
     f"Guess a number between {low} and {high}. "
-    f"Attempts left: {attempt_limit - st.session_state.attempts}"
+    f"Attempts left: {max(0, attempt_limit - st.session_state.attempts)}"
 )
 
 with st.expander("Developer Debug Info"):
@@ -143,7 +73,7 @@ with st.expander("Developer Debug Info"):
 
 raw_guess = st.text_input(
     "Enter your guess:",
-    key=f"guess_input_{difficulty}"
+    key=f"guess_input_{difficulty}",
 )
 
 col1, col2, col3 = st.columns(3)
@@ -156,8 +86,11 @@ with col3:
 
 if new_game:
     st.session_state.attempts = 0
-    #FIXME: Logic breaks here
     st.session_state.secret = random.randint(low, high)
+    st.session_state.score = 0
+    st.session_state.status = "playing"
+    st.session_state.history = []
+    console.log(f"New game started at difficulty {difficulty} with range {low}-{high}.")
     st.success("New game started.")
     st.rerun()
 
@@ -169,22 +102,19 @@ if st.session_state.status != "playing":
     st.stop()
 
 if submit:
-    st.session_state.attempts += 1
-
     ok, guess_int, err = parse_guess(raw_guess)
 
     if not ok:
-        st.session_state.history.append(raw_guess)
+        console.log(f"Rejected guess input: {raw_guess!r}")
         st.error(err)
     else:
+        st.session_state.attempts += 1
         st.session_state.history.append(guess_int)
 
-        if st.session_state.attempts % 2 == 0:
-            secret = str(st.session_state.secret)
-        else:
-            secret = st.session_state.secret
-
-        outcome, message = check_guess(guess_int, secret)
+        outcome, message = check_guess(guess_int, st.session_state.secret)
+        console.log(
+            f"Guess #{st.session_state.attempts}: {guess_int} against secret {st.session_state.secret} -> {outcome}"
+        )
 
         if show_hint:
             st.warning(message)
@@ -202,15 +132,13 @@ if submit:
                 f"You won! The secret was {st.session_state.secret}. "
                 f"Final score: {st.session_state.score}"
             )
-        else:
-            if st.session_state.attempts >= attempt_limit:
-                st.session_state.status = "lost"
-                st.error(
-                    f"Out of attempts! "
-                    f"The secret was {st.session_state.secret}. "
-                    f"Score: {st.session_state.score}"
-                )
+        elif st.session_state.attempts >= attempt_limit:
+            st.session_state.status = "lost"
+            st.error(
+                f"Out of attempts! "
+                f"The secret was {st.session_state.secret}. "
+                f"Score: {st.session_state.score}"
+            )
 
 st.divider()
 st.caption("Built by an AI that claims this code is production-ready.")
->>>>>>> b841e9d (Updates to overall documentation.)

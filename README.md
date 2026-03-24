@@ -31,7 +31,7 @@ It wrote the code, ran away, and now the game is unplayable.
 
 ## 📸 Demo
 
-- [ ] [Insert a screenshot of your fixed, winning game here]
+- [ ] [#winning](/workspaces/ai110-module1show-gameglitchinvestigator-starter/winning.png)
 
 ## 🚀 Stretch Features
 
