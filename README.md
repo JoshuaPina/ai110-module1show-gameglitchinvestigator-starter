@@ -36,7 +36,7 @@ It wrote the code, ran away, and now the game is unplayable.
 
 ## 📸 Demo
 
-- [x] [winning](winning.png)
+- [x] ![winning](winning.png)
 
 ## ✅ Challenge 1: Advanced Edge-Case Testing
 
